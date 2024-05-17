@@ -1,8 +1,23 @@
 /**
+ * @module CreateCustomer
+ * @description This module is responsible for creating customer data.
  * @NApiVersion 2.1
  */
 define(["N/record"], function (record) {
-  function createCustomer(data) {
+  /**
+   * @exports CreateCustomer
+   */
+  let CreateCustomer = {};
+
+  /**
+   * Creates a new customer.
+   * @param {Object} data - The data to create the customer.
+   * @returns {Object} - The response object.
+   * @returns {boolean} success - Indicates whether the request was successful.
+   * @returns {string} message - The message associated with the response.
+   * @returns {string} customerId - The internal id of the created customer.
+   */
+  CreateCustomer.createCustomer = function (data) {
     try {
       let customer = record.create({
         type: record.Type.CUSTOMER,
@@ -24,7 +39,7 @@ define(["N/record"], function (record) {
       log.error("Error creating customer", e.message);
       return { success: false, message: e.message };
     }
-  }
+  };
 
-  return createCustomer;
+  return CreateCustomer;
 });
