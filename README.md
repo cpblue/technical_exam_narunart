@@ -1,2 +1,1 @@
-# technical_exam_narunart
-- view document in /exam1/restlet/docs/index.html
+# Please checkout this repo and view document in /exam1/restlet/docs/index.html ou your browser
