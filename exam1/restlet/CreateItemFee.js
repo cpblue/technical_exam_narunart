@@ -2,33 +2,35 @@
  * @NApiVersion 2.1
  */
 define(["N/record", "N/search"], function (record, search) {
-  function createInvoice(data) {
+  function CreateItemFee(data) {
     try {
       let customerId = findCustomer(data);
-      let invoice = record.create({
-        type: record.Type.INVOICE,
+      let itemFee = record.create({
+        type: "customrecord_account_management_fee",
       });
       //TODO: add validation functions
-      invoice.setValue({ fieldId: "entity", value: customerId });
-      invoice.setValue({ fieldId: "trandate", value: data.tranDate });
-      invoice.setValue({ fieldId: "memo", value: data.memo });
-      invoice.setValue({ fieldId: "tranid", value: data.tranId });
-      invoice.setValue({ fieldId: "externalid", value: data.tranId });
-      //TODO: find Account Management Fee to charge the Customer
-      invoice.selectNewLine({ sublistId: "item" });
-      invoice.setCurrentSublistValue({
-        sublistId: "item",
-        fieldId: "item",
+      //TODO: convert to sublist for multiple items
+      //TODO: function to find item internalid by name
+      // for now, assuming it is hardcoded single service item
+      itemFee.setValue({
+        fieldId: "custrecord_account_management_item",
         value: data.item,
       });
-      invoice.setCurrentSublistValue({
-        sublistId: "item",
-        fieldId: "amount",
+      itemFee.setValue({
+        fieldId: "custrecord_account_management_item_amount",
         value: data.amount,
       });
-      invoice.commitLine({ sublistId: "item" });
-      let invoiceId = invoice.save();
-      return { success: true, invoiceId: invoiceId };
+      itemFee.setValue({
+        fieldId: "custrecord_account_responsible_party",
+        value: customerId,
+      });
+      itemFee.setValue({
+        fieldId: "custrecord_account_management_fee_process_date",
+        value: data.processDate,
+      });
+      let itemFeeId = itemFee.save();
+
+      return { success: true, internalid: itemFeeId };
     } catch (e) {
       return { success: false, message: e.message };
     }
@@ -53,5 +55,5 @@ define(["N/record", "N/search"], function (record, search) {
     }
     return customerId;
   }
-  return createInvoice;
+  return CreateItemFee;
 });

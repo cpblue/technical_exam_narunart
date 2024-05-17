@@ -9,6 +9,7 @@ define([
   "./CreateInvoice",
   "./UpdateCustomer",
   "./DeleteCustomer",
+  "./CreateItemFee",
 ], function (
   log,
   getCustomer,
@@ -39,6 +40,8 @@ define([
       return createCustomer(data);
     } else if (action === "createInvoice") {
       return createInvoice(data);
+    } else if (action === "createItemFee") {
+      return createItemFee(data);
     }
     return { success: false, message: "Invalid POST request" };
   }
