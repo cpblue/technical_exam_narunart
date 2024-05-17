@@ -1,17 +1,17 @@
 /**
- * @NApiVersion 2.x
+ * @NApiVersion 2.1
  */
 define(["N/record", "N/search"], function (record, search) {
   function createInvoice(data) {
     try {
-      var customerId;
+      let customerId;
       if (data.externalId) {
-        var customerSearch = search.create({
+        let customerSearch = search.create({
           type: search.Type.CUSTOMER,
           filters: [["externalid", search.Operator.IS, data.externalId]],
           columns: ["internalid"],
         });
-        var result = customerSearch.run().getRange({ start: 0, end: 1 });
+        let result = customerSearch.run().getRange({ start: 0, end: 1 });
         if (result.length > 0) {
           customerId = result[0].getValue("internalid");
         } else {
@@ -21,7 +21,7 @@ define(["N/record", "N/search"], function (record, search) {
         customerId = data.customerId;
       }
 
-      var invoice = record.create({
+      let invoice = record.create({
         type: record.Type.INVOICE,
       });
       invoice.setValue({ fieldId: "entity", value: customerId });
@@ -38,7 +38,7 @@ define(["N/record", "N/search"], function (record, search) {
         value: data.amount,
       });
       invoice.commitLine({ sublistId: "item" });
-      var invoiceId = invoice.save();
+      let invoiceId = invoice.save();
       return { success: true, invoiceId: invoiceId };
     } catch (e) {
       return { success: false, message: e.message };

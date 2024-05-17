@@ -1,14 +1,15 @@
 /**
- * @NApiVersion 2.x
+ * @NApiVersion 2.1
  */
 define(["N/record", "N/search"], function (record, search) {
   function updateCustomerById(customerId, data) {
     try {
-      var customer = record.load({
+      let customer = record.load({
         type: record.Type.CUSTOMER,
         id: customerId,
       });
-      for (var field in data) {
+      //TODO: add validation functions
+      for (let field in data) {
         if (
           data.hasOwnProperty(field) &&
           field !== "customerId" &&
@@ -26,14 +27,14 @@ define(["N/record", "N/search"], function (record, search) {
 
   function updateCustomerByExternalId(externalId, data) {
     try {
-      var customerSearch = search.create({
+      let customerSearch = search.create({
         type: search.Type.CUSTOMER,
         filters: [["externalid", search.Operator.IS, externalId]],
         columns: ["internalid"],
       });
-      var result = customerSearch.run().getRange({ start: 0, end: 1 });
+      let result = customerSearch.run().getRange({ start: 0, end: 1 });
       if (result.length > 0) {
-        var customerId = result[0].getValue("internalid");
+        let customerId = result[0].getValue("internalid");
         return updateCustomerById(customerId, data);
       } else {
         return { success: false, message: "Customer not found" };

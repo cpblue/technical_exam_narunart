@@ -1,12 +1,11 @@
 /**
- * @NApiVersion 2.x
+ * @NApiVersion 2.1
  * @NScriptType Restlet
  */
 define([
   "N/log",
   "./GetCustomer",
   "./CreateCustomer",
-  "./CreateCustomRecord",
   "./CreateInvoice",
   "./UpdateCustomer",
   "./DeleteCustomer",
@@ -14,28 +13,30 @@ define([
   log,
   getCustomer,
   createCustomer,
-  createCustomRecord,
   createInvoice,
   updateCustomer,
   deleteCustomer
 ) {
   function handleGet(requestParams) {
-    if (requestParams.externalId) {
-      return getCustomer.byExternalId(requestParams.externalId);
-    } else if (requestParams.customerId) {
-      return getCustomer.byId(requestParams.customerId);
+    let action = requestParams.action;
+
+    if (action === "getCustomer") {
+      if (requestParams.externalId) {
+        return getCustomer.byExternalId(requestParams.externalId);
+      } else if (requestParams.customerId) {
+        return getCustomer.byId(requestParams.customerId);
+      }
     }
+
     return { success: false, message: "Invalid GET request" };
   }
 
   function handlePost(requestBody) {
-    var action = requestBody.action;
-    var data = requestBody.data;
+    let action = requestBody.action;
+    let data = requestBody.data;
 
     if (action === "createCustomer") {
       return createCustomer(data);
-    } else if (action === "createCustomRecord") {
-      return createCustomRecord(data);
     } else if (action === "createInvoice") {
       return createInvoice(data);
     }
@@ -43,7 +44,7 @@ define([
   }
 
   function handlePut(requestBody) {
-    var data = requestBody.data;
+    let data = requestBody.data;
     if (data.externalId) {
       return updateCustomer.byExternalId(data.externalId, data);
     } else if (data.customerId) {

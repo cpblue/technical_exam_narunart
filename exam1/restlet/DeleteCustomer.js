@@ -1,9 +1,10 @@
 /**
- * @NApiVersion 2.x
+ * @NApiVersion 2.1
  */
 define(["N/record", "N/search"], function (record, search) {
   function deleteCustomerById(customerId) {
     try {
+      log.warn("Deleting customer with id: " + customerId);
       record.delete({
         type: record.Type.CUSTOMER,
         id: customerId,
@@ -16,14 +17,15 @@ define(["N/record", "N/search"], function (record, search) {
 
   function deleteCustomerByExternalId(externalId) {
     try {
-      var customerSearch = search.create({
+      log.warn("Deleting customer with externalId: " + externalId);
+      let customerSearch = search.create({
         type: search.Type.CUSTOMER,
         filters: [["externalid", search.Operator.IS, externalId]],
         columns: ["internalid"],
       });
-      var result = customerSearch.run().getRange({ start: 0, end: 1 });
+      let result = customerSearch.run().getRange({ start: 0, end: 1 });
       if (result.length > 0) {
-        var customerId = result[0].getValue("internalid");
+        let customerId = result[0].getValue("internalid");
         return deleteCustomerById(customerId);
       } else {
         return { success: false, message: "Customer not found" };
